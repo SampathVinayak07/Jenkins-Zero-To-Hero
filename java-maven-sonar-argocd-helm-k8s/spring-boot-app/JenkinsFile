@@ -6,7 +6,13 @@ pipeline {
             args '--entrypoint=""' 
         }
   }
-
+  options {
+        // Automatically wipes the entire workspace directory before the build starts.
+        // This is a Jenkins command, run by the Jenkins user, which bypasses 
+        // the permission conflicts the container user was hitting.
+        skipStagesWithUnstableResults()
+        cleanWs() // <-- ADD THIS LINE
+  }
   stages {
     stage('Checkout') {
       steps {
