@@ -18,11 +18,14 @@ pipeline {
     stage('Build and Test') {
       steps {
         sh '''
-        # 1. Take ownership of the workspace (Fixes permission issues)
-        chown -R $(id -u):$(id -g) .
-
-        # 2. Change directory and run build
+        # Navigate to the project directory
         cd java-maven-sonar-argocd-helm-k8s/spring-boot-app
+
+        # Forcefully delete the 'target' folder to clear previous build artifacts
+        # This bypasses the permission conflict that 'mvn clean' failed on.
+        rm -rf target
+
+        # Run the build
         mvn clean package
         '''
       }
